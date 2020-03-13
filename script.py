@@ -4,7 +4,7 @@ import sys
 # call e.g.: python script.py 4 dtc file,file,file,file...
 
 if not len(sys.argv) == 4:
-    print("error, please supply channel mask and detector name")
+    print("error, please supply channel mask, detector name and files seperated by commas")
 else:
     try:
         channelMask = int(sys.argv[1])
