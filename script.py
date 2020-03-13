@@ -1,9 +1,9 @@
 from ROOT import *
 import sys
 
-# call e.g.: python script.py 4 dtc 
+# call e.g.: python script.py 4 dtc file,file,file,file...
 
-if not len(sys.argv) == 3:
+if not len(sys.argv) == 4:
     print("error, please supply channel mask and detector name")
 else:
     try:

@@ -10,18 +10,14 @@
 
 using namespace std;
 
-void mergescript(int channelMask, const char* detector, const char* files)
-{
-  cout << "Initialisieren" << endl;
+void _merge(int channelMask, const char* detector, string file, TTree* outputTree) {
+  cout << "Verarbeite " << file << "... ";
 
-  TFile* inputFile = new TFile("nELBE_beam_intTrg_0021.root", "READ");
+  char fileArray[1024];
+  strcpy(fileArray, file.c_str());
+
+  TFile* inputFile = new TFile(fileArray, "READ");
   TTree* inputTree = (TTree*) inputFile->Get(detector);
-
-  TFile* outputFile = new TFile("output.root", "RECREATE");
-  TTree* outputTree = new TTree(detector, "Detector Data");
-
-  string filesString(files);
-  cout << filesString << endl;
 
   unsigned char channel;
   unsigned short energy;
@@ -62,15 +58,33 @@ void mergescript(int channelMask, const char* detector, const char* files)
 
   long long entryCount = inputTree->GetEntries();
 
-  cout << "Filtern" << endl;
+  cout << "Filtern ...";
   for(long long i = 0; i < entryCount; i++){
     inputTree->GetEntry(i);
     if (channelMask & (1 << channel)){
       outputTree->Fill();
     }
   }
-
-  outputFile->Write();
-
   cout << "Fertig!" << endl;
+
+}
+
+void mergescript(int channelMask, const char* detector, const char* files)
+{
+  cout << "Initialisieren" << endl;
+  TFile* outputFile = new TFile("output.root", "RECREATE");
+  TTree* outputTree = new TTree(detector, "Detector Data");
+
+  string filesString(files);
+  string delimiter = ",";
+  size_t position = 0;
+  string token;
+  while((position = filesString.find(delimiter)) != string::npos){
+    token = filesString.substr(0, position);
+    _merge(channelMask, detector, token, outputTree);
+    filesString.erase(0, position + delimiter.length());
+  }
+  _merge(channelMask, detector, filesString, outputTree);
+  outputFile->Write();
+  cout << "Gespeichert!" << endl;
 }
