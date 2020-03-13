@@ -9,10 +9,11 @@ else:
     try:
         channelMask = int(sys.argv[1])
         detector  = sys.argv[2]
+        files = sys.argv[3]
 
         from ROOT import *
         gSystem.Load("mergescript.cc")
         gROOT.ProcessLine(".L mergescript.cc")
-        gROOT.ProcessLine("mergescript(%s, \"%s\")" % (channelMask, detector))
+        gROOT.ProcessLine("mergescript(%s, \"%s\", \"%s\")" % (channelMask, detector, files))
     except Exception as e:
         print(e)

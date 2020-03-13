@@ -10,7 +10,7 @@
 
 using namespace std;
 
-void mergescript(int channelMask, const char* detector)
+void mergescript(int channelMask, const char* detector, const char* files)
 {
   cout << "Initialisieren" << endl;
 
@@ -19,6 +19,9 @@ void mergescript(int channelMask, const char* detector)
 
   TFile* outputFile = new TFile("output.root", "RECREATE");
   TTree* outputTree = new TTree(detector, "Detector Data");
+
+  string filesString(files);
+  cout << filesString << endl;
 
   unsigned char channel;
   unsigned short energy;
